@@ -23,7 +23,7 @@ from fastmcp import FastMCP
 S3_BUCKET = os.getenv('S3_BUCKET', 'legal-amendment-mcp')
 DEFAULT_DECREE_S3_PATH = 'decrees/Decree-118_2021.json'
 DEFAULT_AMENDMENT_S3_PATH = 'ammendments/190_2025_ND-CP.json'
-
+PORT = os.getenv('PORT', 3000)
 # Initialize S3 client
 try:
     s3_client = boto3.client('s3', region_name='us-east-1', aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'), aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')  )
@@ -394,7 +394,7 @@ class LegalDocumentAnalyzer:
         return combined_content
 
 # Initialize FastMCP server
-mcp = FastMCP("legal-amendment-detector", port=3000)
+mcp = FastMCP("legal-amendment-detector", port=PORT)
 
 # Initialize document analyzer
 analyzer = LegalDocumentAnalyzer()
