@@ -11,6 +11,7 @@ from datetime import datetime
 import boto3
 import os
 from io import StringIO
+import argparse
 
 # Configure logging first
 logging.basicConfig(level=logging.INFO)
@@ -449,7 +450,7 @@ def get_changes_in_article(article_number: str, decree_file: str = "", amendment
         return f"Error getting changes for article {article_number}: {str(e)}"
 
 @mcp.tool
-def summarize_all_changes(decree_file: str = None, amendment_file: str =  "") -> str:
+def summarize_all_changes(decree_file: str = "", amendment_file: str =  "") -> str:
     """Generate a comprehensive summary of all changes between decree and amendment. Optionally provide decree_file and amendment_file to load different documents."""
     try:
         # Load documents if provided
@@ -511,7 +512,7 @@ def compare_article_before_after(article_number: str, decree_file: str =  "", am
         return f"Error comparing article {article_number}: {str(e)}"
 
 @mcp.tool
-def get_amendment_statistics(decree_file: str = None, amendment_file: str =  "") -> str:
+def get_amendment_statistics(decree_file: str = "", amendment_file: str =  "") -> str:
     """Get statistics about amendment types and affected articles. Optionally provide decree_file and amendment_file to load different documents."""
     try:
         # Load documents if provided
@@ -620,39 +621,39 @@ def get_combined_article_view(article_number: str, decree_file: str =  "", amend
         logger.error(f"Error getting combined article view for {article_number}: {e}")
         return f"Error getting combined article view for {article_number}: {str(e)}"
 
-@mcp.tool
-def debug_s3_connection() -> str:
-    """Debug S3 connection and attempt to load default documents"""
-    try:
-        debug_info = {
-            "s3_available": S3_AVAILABLE,
-            "s3_bucket": S3_BUCKET,
-            "default_decree_path": DEFAULT_DECREE_S3_PATH,
-            "default_amendment_path": DEFAULT_AMENDMENT_S3_PATH,
-            "current_documents_loaded": {
-                "decree_loaded": analyzer.decree_data is not None,
-                "amendment_loaded": analyzer.amendment_data is not None
-            }
-        }
+# @mcp.tool
+# def debug_s3_connection() -> str:
+#     """Debug S3 connection and attempt to load default documents"""
+#     try:
+#         debug_info = {
+#             "s3_available": S3_AVAILABLE,
+#             "s3_bucket": S3_BUCKET,
+#             "default_decree_path": DEFAULT_DECREE_S3_PATH,
+#             "default_amendment_path": DEFAULT_AMENDMENT_S3_PATH,
+#             "current_documents_loaded": {
+#                 "decree_loaded": analyzer.decree_data is not None,
+#                 "amendment_loaded": analyzer.amendment_data is not None
+#             }
+#         }
         
-        if S3_AVAILABLE:
-            # Test S3 connection by trying to load default documents
-            debug_info["s3_test"] = "Attempting to load default documents..."
-            try:
-                success = analyzer.load_default_documents()
-                debug_info["s3_test_result"] = "Success" if success else "Failed"
-                debug_info["documents_after_load"] = {
-                    "decree_loaded": analyzer.decree_data is not None,
-                    "amendment_loaded": analyzer.amendment_data is not None
-                }
-            except Exception as e:
-                debug_info["s3_test_result"] = f"Error: {str(e)}"
-        else:
-            debug_info["s3_test"] = "S3 not available"
+#         if S3_AVAILABLE:
+#             # Test S3 connection by trying to load default documents
+#             debug_info["s3_test"] = "Attempting to load default documents..."
+#             try:
+#                 success = analyzer.load_default_documents()
+#                 debug_info["s3_test_result"] = "Success" if success else "Failed"
+#                 debug_info["documents_after_load"] = {
+#                     "decree_loaded": analyzer.decree_data is not None,
+#                     "amendment_loaded": analyzer.amendment_data is not None
+#                 }
+#             except Exception as e:
+#                 debug_info["s3_test_result"] = f"Error: {str(e)}"
+#         else:
+#             debug_info["s3_test"] = "S3 not available"
         
-        return json.dumps(debug_info, indent=2, ensure_ascii=False)
-    except Exception as e:
-        return f"Debug error: {str(e)}"
+#         return json.dumps(debug_info, indent=2, ensure_ascii=False)
+#     except Exception as e:
+#         return f"Debug error: {str(e)}"
 
 @mcp.tool
 def check_document_status() -> str:
@@ -758,5 +759,21 @@ def generate_analysis_report(report_type: str = "comprehensive", s3_bucket: str 
         }, indent=2, ensure_ascii=False)
 
 if __name__ == "__main__":
-    logger.info("Starting Legal Amendment Detection FastMCP Server...")
-    mcp.run(transport="streamable-http")
+    print("🚀Starting server... ")
+
+    # Debug Mode
+    #  uv run mcp dev server.py
+
+    # Production Mode
+    # uv run server.py --server_type=sse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--server_type", type=str, default="sse", choices=["sse", "stdio"]
+    )
+    print("Server type: ", parser.parse_args().server_type)
+    print("Launching on Port: ", 3000)
+    print('Check "http://localhost:3000/sse" for the server status')
+
+    args = parser.parse_args()
+    mcp.run(args.server_type)
