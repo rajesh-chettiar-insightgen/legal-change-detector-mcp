@@ -1,0 +1,24 @@
+# Core PDF processing
+pdfplumber==0.10.3
+PyPDF2==3.0.1
+pymupdf==1.23.8
+
+# MCP server framework
+mcp==1.0.0
+fastmcp>=0.1.0
+
+# Basic text processing (built-in regex is sufficient for MVP)
+# No additional dependencies needed for core functionality
+
+# LLM integration for amendment analysis
+openai==1.6.1
+
+# Schema validation
+jsonschema==4.19.2
+
+# PDF Report Generation
+reportlab>=4.0.0
+
+# AWS S3 Integration
+boto3>=1.26.0
+botocore>=1.29.0
