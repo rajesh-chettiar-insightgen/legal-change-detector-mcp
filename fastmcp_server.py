@@ -394,7 +394,7 @@ class LegalDocumentAnalyzer:
         return combined_content
 
 # Initialize FastMCP server
-mcp = FastMCP("legal-amendment-detector", port=PORT)
+mcp = FastMCP("legal-amendment-detector")
 
 # Initialize document analyzer
 analyzer = LegalDocumentAnalyzer()
@@ -776,4 +776,4 @@ if __name__ == "__main__":
     print('Check "http://localhost:3000/sse" for the server status')
 
     args = parser.parse_args()
-    mcp.run(args.server_type)
+    mcp.run(args.server_type, host="0.0.0.0", port=PORT)
