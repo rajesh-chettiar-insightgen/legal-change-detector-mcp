@@ -394,7 +394,7 @@ class LegalDocumentAnalyzer:
         return combined_content
 
 # Initialize FastMCP server
-mcp = FastMCP("legal-amendment-detector")
+mcp = FastMCP("legal-amendment-detector", port=3000)
 
 # Initialize document analyzer
 analyzer = LegalDocumentAnalyzer()
