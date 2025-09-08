@@ -4,8 +4,9 @@
 # pymupdf==1.23.8
 
 # MCP server framework
-mcp==1.0.0
-fastmcp>=0.1.0
+mcp
+fastmcp
+uvicorn
 
 # Basic text processing (built-in regex is sufficient for MVP)
 # No additional dependencies needed for core functionality
