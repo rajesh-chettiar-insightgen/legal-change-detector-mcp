@@ -1,7 +1,7 @@
 # Core PDF processing
-pdfplumber==0.10.3
-PyPDF2==3.0.1
-pymupdf==1.23.8
+# pdfplumber==0.10.3
+# PyPDF2==3.0.1
+# pymupdf==1.23.8
 
 # MCP server framework
 mcp==1.0.0
@@ -11,7 +11,7 @@ fastmcp>=0.1.0
 # No additional dependencies needed for core functionality
 
 # LLM integration for amendment analysis
-openai==1.6.1
+openai
 
 # Schema validation
 jsonschema==4.19.2
